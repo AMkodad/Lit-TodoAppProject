@@ -2,11 +2,22 @@ import { LitElement, css, html } from 'lit'
 import { customElement, property } from 'lit/decorators.js'
 import "./assets/delete_icon.svg"
 
+interface TodoItem {
+    text: string;
+    completed: boolean;
+  }
+
 @customElement('todo-app')
 export class TodoApp extends LitElement {
-  @property({ type: Array }) todos: string[] = [];
+  @property({ type: Array }) todos: TodoItem[] = [];
   @property({ type: String }) newTodo: string = '';
   @property({ type: Number }) deleteIconIndex: number | null = null;
+  @property({ type: Number }) pendingTasksCount: number = 0;
+
+  constructor() {
+    super();
+    this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length; // Initialize with length of todos
+  }
 
   static styles = css`
     /* Your styles here */
@@ -67,7 +78,17 @@ export class TodoApp extends LitElement {
     li {
       width: 88%;
       height: 100%;
-      padding: 10px;
+      padding-left: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      column-gap: 5px;
+    }
+
+    .checkbox{
+        width: 28px;
+        height: 28px;
     }
 
     svg{
@@ -109,7 +130,8 @@ export class TodoApp extends LitElement {
       ${this.todos.map((todo, index) => html`
       <ul class="task" @click="${() => this.showDeleteIcon(index)}" @dblclick="${() => this.hideDeleteIcon()}">
         <li>
-        ${todo}
+        <input type="checkbox" class="checkbox" @change="${(event: Event) => this.toggleStrikeout(index, (event.target as HTMLInputElement).checked)}" .checked="${todo.completed}">
+        <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'}">${todo.text}</span>
         </li>
         ${this.deleteIconIndex === index ? html`
         <span class="delete-icon" @click="${() => this.deleteTodo(index)}" >
@@ -121,7 +143,7 @@ export class TodoApp extends LitElement {
       </ul>
       `)}
       <div class="bottom-line">
-        <p>You have ${this.todos.length} pending tasks</p>
+        <p>You have ${this.pendingTasksCount} pending tasks</p>
         <button class="clear-button" @click="${() => this.clearAll()}">Clear All</button>
       </div>
     </div>  
@@ -134,10 +156,28 @@ export class TodoApp extends LitElement {
 
   addTodo() {
     if (this.newTodo.trim() !== '') {
-      this.todos = [...this.todos, this.newTodo.trim()];
-      this.newTodo = '';
-    }
+        this.todos = [...this.todos, { text: this.newTodo.trim(), completed: false }];
+        this.pendingTasksCount++;
+        this.newTodo = '';
+      }
   }
+
+  toggleStrikeout(index: number, checked: boolean) {
+    const todo = this.todos[index];
+    if (todo.completed !== checked) {
+      todo.completed = checked;
+      if (checked) {
+        // If the task is completed, reduce the pending tasks count
+        if (this.pendingTasksCount > 0) {
+          this.pendingTasksCount--;
+        }
+      } else {
+        // If the task is marked incomplete, increase the pending tasks count
+        this.pendingTasksCount++;
+      }
+      this.requestUpdate();
+    }
+  }  
 
   showDeleteIcon(index: number) {
     this.deleteIconIndex = index;
@@ -148,12 +188,16 @@ export class TodoApp extends LitElement {
   }
 
   deleteTodo(index: number) {
-    this.todos.splice(index, 1);
-    this.requestUpdate();
+    if (!this.todos[index].completed) {
+        this.pendingTasksCount--; // Reduce pending tasks count only if the task is not completed
+      }
+      this.todos.splice(index, 1);
+      this.requestUpdate();
   }
 
   clearAll() {
     this.todos = [];
+    this.pendingTasksCount = 0; 
     this.requestUpdate();
   }
 }
