@@ -17,6 +17,13 @@ export class TodoApp extends LitElement {
   constructor() {
     super();
     this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length; // Initialize with length of todos
+    // Retrieve todos from localStorage on component initialization
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+      this.todos = JSON.parse(savedTodos);
+    }
+    this.updatePendingTasksCount();
+  
   }
 
   static styles = css`
@@ -158,6 +165,8 @@ export class TodoApp extends LitElement {
     if (this.newTodo.trim() !== '') {
         this.todos = [...this.todos, { text: this.newTodo.trim(), completed: false }];
         this.pendingTasksCount++;
+        this.updatePendingTasksCount();
+        this.saveTodosToLocalStorage();
         this.newTodo = '';
       }
   }
@@ -175,6 +184,7 @@ export class TodoApp extends LitElement {
         // If the task is marked incomplete, increase the pending tasks count
         this.pendingTasksCount++;
       }
+      this.saveTodosToLocalStorage();
       this.requestUpdate();
     }
   }  
@@ -192,14 +202,25 @@ export class TodoApp extends LitElement {
         this.pendingTasksCount--; // Reduce pending tasks count only if the task is not completed
       }
       this.todos.splice(index, 1);
+      this.updatePendingTasksCount();
+      this.saveTodosToLocalStorage();
       this.requestUpdate();
   }
 
   clearAll() {
     this.todos = [];
     this.pendingTasksCount = 0; 
+    this.saveTodosToLocalStorage();
     this.requestUpdate();
   }
+
+  updatePendingTasksCount() {
+    this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length;
+  }
+
+  saveTodosToLocalStorage() {
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  }  
 }
 
 
