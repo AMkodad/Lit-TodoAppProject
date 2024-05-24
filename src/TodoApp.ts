@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit'
-import { customElement, property, state } from 'lit/decorators.js'
+import { customElement, state } from 'lit/decorators.js'
 
 interface TodoItem {
     text: string;
@@ -10,9 +10,12 @@ interface TodoItem {
 export class TodoApp extends LitElement {
   @state()
   protected todos: TodoItem[] = [];
-  @property({ type: String }) newTodo: string = '';
-  @property({ type: Number }) deleteIconIndex: number | null = null;
-  @property({ type: Number }) pendingTasksCount: number = 0;
+  @state()
+  protected newTodo: string = '';
+  @state()
+  protected deleteIconIndex: number | null = null;
+  @state() 
+  protected pendingTasksCount: number = 0;
 
   constructor() {
     super();
@@ -121,18 +124,23 @@ export class TodoApp extends LitElement {
     }
 
   `;
+  updatePendingTasksCount() {
+    this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length;
+  }
 
+  saveTodosToLocalStorage() {
+    localStorage.setItem('todos', JSON.stringify(this.todos));
+  } 
+  
   updateNewTodo(event: Event) {
     this.newTodo = (event.target as HTMLInputElement).value;
   }
-
 
   addTodo(event: KeyboardEvent | MouseEvent) {
     const trimmedTodo = this.newTodo.trim();
     if(trimmedTodo !== ''){
       if ((event.type === 'click' ) || (event.type === 'keypress' && (event as KeyboardEvent).key === 'Enter' )) {
-        this.todos.push({ text: trimmedTodo, completed: false });
-        this.pendingTasksCount++;
+        this.todos = [...this.todos, { text: trimmedTodo, completed: false }];
         this.updatePendingTasksCount();
         this.saveTodosToLocalStorage();
         this.newTodo = '';
@@ -140,33 +148,16 @@ export class TodoApp extends LitElement {
     }
   }
 
-  toggleStrikeout(index: number, checked: boolean) {
-    const todo = this.todos[index];
-    if (todo.completed !== checked) {
-      todo.completed = checked;
-      if (checked) {
-        // If the task is completed, reduce the pending tasks count
-        if (this.pendingTasksCount > 0) {
-          this.pendingTasksCount--;
-        }
-      } else {
-        // If the task is marked incomplete, increase the pending tasks count
-        this.pendingTasksCount++;
-      }
-      this.saveTodosToLocalStorage();
-    }
+  toggleStrikeout(index: number) {
+    const updatedTodos = [...this.todos];
+    updatedTodos[index].completed = !updatedTodos[index].completed;
+    this.todos = updatedTodos;
+    this.updatePendingTasksCount();
+    this.saveTodosToLocalStorage();
   }  
 
-
   deleteTodo(index: number) {
-    const mark = this.todos[index].completed;
-    console.log(index);  
-    this.todos.splice(index, 1);
-    if (!mark) {
-        this.pendingTasksCount--; // Reduce pending tasks count only if the task is not completed
-      }  
-    console.log(index);  
-    
+    this.todos = this.todos.filter((_, i) => i !== index);
     this.updatePendingTasksCount();
     this.saveTodosToLocalStorage();
   }
@@ -177,14 +168,6 @@ export class TodoApp extends LitElement {
     this.saveTodosToLocalStorage();
   }
 
-  updatePendingTasksCount() {
-    this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length;
-  }
-
-  saveTodosToLocalStorage() {
-    localStorage.setItem('todos', JSON.stringify(this.todos));
-  } 
-  
   render() {
     return html`
     <div class="todo-app-container">
@@ -199,11 +182,11 @@ export class TodoApp extends LitElement {
       ${this.todos.map((todo, index) => html`
       <ul>
         <li class="task">
-        <input type="checkbox" class="checkbox" @change="${(event: Event) => this.toggleStrikeout(index, (event.target as HTMLInputElement).checked)}" .checked="${todo.completed}">
+        <input type="checkbox" class="checkbox" @change="${() => this.toggleStrikeout(index)}" .checked="${todo.completed}">
         <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'}">${todo.text}</span>
-        <span class="delete-icon" @click="${() => this.deleteTodo(index)}" >
-        <img src="./assets/bin.png" />
-        </span>
+        <div class="delete-icon" @click="${() => this.deleteTodo(index)}">
+          <img src="/assets/delete_icon.svg" >
+        </div>
         </li> 
       </ul>
       `)}
