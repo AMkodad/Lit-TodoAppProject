@@ -1,5 +1,6 @@
-import { LitElement, css, html } from 'lit'
-import { customElement, state } from 'lit/decorators.js'
+import { LitElement, css, html } from 'lit';
+import { customElement, state } from 'lit/decorators.js';
+import deleteIcon from './assets/bin.png';
 
 interface TodoItem {
     text: string;
@@ -90,10 +91,6 @@ export class TodoApp extends LitElement {
         height: 28px;
     }
 
-    img {
-      max-width: 100%;
-      height: auto;
-    }
     
     .delete-icon {
       width: 45px;
@@ -105,8 +102,16 @@ export class TodoApp extends LitElement {
       right: 0;
       opacity: 0;
       transition: opacity 0.3s ease; /* Smooth transition */ 
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
+    img {
+      max-width: 60%;
+      height: auto;
+    }
+    
     .task:hover .delete-icon{
       opacity: 1; /* item visible on hover */
     }
@@ -182,11 +187,15 @@ export class TodoApp extends LitElement {
       ${this.todos.map((todo, index) => html`
       <ul>
         <li class="task">
-        <input type="checkbox" class="checkbox" @change="${() => this.toggleStrikeout(index)}" .checked="${todo.completed}">
-        <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'}">${todo.text}</span>
-        <div class="delete-icon" @click="${() => this.deleteTodo(index)}">
-          <img src="/assets/delete_icon.svg" >
-        </div>
+          <input 
+            type="checkbox" 
+            class="checkbox" 
+            @change="${() => this.toggleStrikeout(index)}" 
+            .checked="${todo.completed}">
+          <span style="text-decoration: ${todo.completed ? 'line-through' : 'none'}">${todo.text}</span>
+          <div class="delete-icon" @click="${() => this.deleteTodo(index)}">
+          <img src="${deleteIcon}" alt="delete icon">
+          </div>
         </li> 
       </ul>
       `)}
