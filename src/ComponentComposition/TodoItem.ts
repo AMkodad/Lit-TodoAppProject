@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import deleteIcon from './assets/delete_icon.svg';
+import deleteIcon from '../assets/delete_icon.svg';
 
 interface TodoItem {
   text: string;
