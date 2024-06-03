@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
-import { TodoMixin } from './TodoMixin';
+import { TodoMixin } from './MethodMixin';
 import deleteIcon from '../assets/bin.png';
 
 @customElement('todo-app-mixin')

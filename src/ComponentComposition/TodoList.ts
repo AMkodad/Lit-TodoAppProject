@@ -27,7 +27,8 @@ export class TodoList extends LitElement {
         .todo="${todo}"
         .index="${index}"
         @toggle-completion="${(e: CustomEvent) => this.dispatchEvent(new CustomEvent('toggle-completion', { detail: e.detail }))}"
-        @delete-todo="${(e: CustomEvent) => this.dispatchEvent(new CustomEvent('delete-todo', { detail: e.detail }))}">
+        @delete-todo="${(e: CustomEvent) => this.dispatchEvent(new CustomEvent('delete-todo', { detail: e.detail }))}"
+        backgroundColor="red">
       </todo-item>
         `)}
       </ul>

@@ -31,7 +31,6 @@ export class TodoComponent extends LitElement {
       max-width: 400px;
       margin: 150px auto;
       padding: 25px;
-      background-color: white;
       border: 1px solid #ccc;
       border-radius: 15px;
     }

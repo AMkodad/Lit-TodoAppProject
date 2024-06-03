@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import deleteIcon from '../assets/delete_icon.svg';
+import { AppearanceMixin } from './AppearanceMixin';
 
 interface TodoItem {
   text: string;
@@ -8,24 +9,27 @@ interface TodoItem {
 }
 
 @customElement('todo-item')
-export class TodoItemElement extends LitElement {
+export class TodoItemElement extends AppearanceMixin(LitElement) {
   @property({ type: Object })
   todo!: TodoItem;
 
   @property({ type: Number })
   index!: number;
 
-  static styles = css`
+  static styles = [
+    ...super.styles,
+    css`
     .task {
       height: 45px;
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-      background-color: #DCDCDC;
       border-radius: 4px;
       margin-bottom: 10px;
       position: relative;
+      color: var(--appearance-color, black); 
+      background-color: var(--appearance-background-color, red);
     }
 
     .checkbox {
@@ -60,7 +64,9 @@ export class TodoItemElement extends LitElement {
     .completed {
         text-decoration: line-through;
       }
-  `;
+  `
+    ]
+  ;
 
   toggleCompletion() {
     this.dispatchEvent(new CustomEvent('toggle-completion', { detail: this.index }));

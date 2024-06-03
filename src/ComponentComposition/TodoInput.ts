@@ -1,12 +1,15 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
+import { AppearanceMixin } from './AppearanceMixin';
 
 @customElement('todo-input')
-export class TodoInput extends LitElement {
+export class TodoInput extends AppearanceMixin(LitElement) {
   @state()
   protected newTodo: string = '';
 
-  static styles = css`
+  static styles = [
+    ...super.styles, 
+     css`
     input[type="text"] {
       width: 88%;
       height: 45px;
@@ -31,7 +34,8 @@ export class TodoInput extends LitElement {
     button:hover {
       background-color: #7D65DB;
     }
-  `;
+  `]
+  ;
 
   updateNewTodo(event: Event) {
     this.newTodo = (event.target as HTMLInputElement).value;
