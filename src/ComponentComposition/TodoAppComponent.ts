@@ -2,14 +2,17 @@ import { LitElement, css, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import './TodoInput';
 import './TodoList';
+import { AppearanceMixin } from './AppearanceMixin';
 
 interface TodoItem {
   text: string;
   completed: boolean;
 }
 
+const Appearance = AppearanceMixin(LitElement);
+
 @customElement('todo-component')
-export class TodoComponent extends LitElement {
+export class TodoComponent extends Appearance {
   @state()
   protected todos: TodoItem[] = [];
   @state()
@@ -24,7 +27,9 @@ export class TodoComponent extends LitElement {
     this.updatePendingTasksCount();
   }
 
-  static styles = css`
+  static styles = [
+    Appearance.styles || [],
+    css`
     .todo-app-container {
       display: block;
       font-family: Arial, sans-serif;
@@ -33,6 +38,8 @@ export class TodoComponent extends LitElement {
       padding: 25px;
       border: 1px solid #ccc;
       border-radius: 15px;
+      background-color: var(--appearance-background-color);
+      color: var(--appearance-color);
     }
 
     .bottom-line{
@@ -45,17 +52,18 @@ export class TodoComponent extends LitElement {
     .clear-button{
         width: 25%;
         font-size: 18px;
-        color: white;
-        background-color: #5D3FD3;
+        color: var(--appearance-button-text-color);
+        background-color: var(--appearance-button-bg-color);
         border: none;
         border-radius: 4px;
     }
 
     button:hover {
-        background-color: #7D65DB;
+        background-color: var(--appearance-button-hover-bg-color);
     } 
   
-  `;
+  `]
+  ;
 
   updatePendingTasksCount() {
     this.pendingTasksCount = this.todos.filter(todo => !todo.completed).length;
@@ -92,7 +100,7 @@ export class TodoComponent extends LitElement {
   }
 
   render() {
-    return html`
+    return this.renderAppearance(html`
       <div class="todo-app-container">
         <h1>Todo App</h1>
         <todo-input @add-todo="${(e: CustomEvent) => this.addTodoItem(e.detail)}"></todo-input>
@@ -106,7 +114,7 @@ export class TodoComponent extends LitElement {
           <button class="clear-button" @click="${this.clearAllTodos}">Clear All</button>
         </div>
       </div>
-    `;
+    `);
   }
 }
 

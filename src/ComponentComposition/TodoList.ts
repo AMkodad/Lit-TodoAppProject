@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import './TodoItem';
+// import { AppearanceMixin } from './AppearanceMixin';
 
 interface TodoItem {
   text: string;
@@ -12,7 +13,8 @@ export class TodoList extends LitElement {
   @property({ type: Array })
   todos: TodoItem[] = [];
 
-  static styles = css`
+  static styles = 
+    css`
     ul {
       list-style-type: none;
       padding: 0;
@@ -28,7 +30,7 @@ export class TodoList extends LitElement {
         .index="${index}"
         @toggle-completion="${(e: CustomEvent) => this.dispatchEvent(new CustomEvent('toggle-completion', { detail: e.detail }))}"
         @delete-todo="${(e: CustomEvent) => this.dispatchEvent(new CustomEvent('delete-todo', { detail: e.detail }))}"
-        backgroundColor="red">
+        >
       </todo-item>
         `)}
       </ul>
