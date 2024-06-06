@@ -15,10 +15,18 @@ export const ModeMixin = <T extends Constructor<LitElement>>(superClass: T) => {
                 :host([mode="dark"]) {
                     background-color: black;
                     color: white;
+                    --button-bg-color:  rgb(0, 165, 152);
+                    --button-color:  white;
+                    --button-hover-color: rgb(1, 106, 100);
+                    --task-item-bg-color: dimgray;
                 }
                 :host([mode="light"]) {
-                    background-color: white;
+                    background-color: #f4f5fa;
                     color: black;
+                    --button-bg-color: #5adbb5; 
+                    --button-color: black;
+                    --button-hover-color: #5dbea3;
+                    --task-item-bg-color: #DCDCDC;
                 }
             `
         ]

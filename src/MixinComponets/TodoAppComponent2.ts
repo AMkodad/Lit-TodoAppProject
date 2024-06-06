@@ -2,19 +2,20 @@ import { LitElement, css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { TodoMixin } from './MethodMixin';
 import deleteIcon from '../assets/bin.png';
+import { ModeMixin } from './ModeMixin';
 
 @customElement('todo-app-mixin')
-export class TodoAppMixin extends TodoMixin(LitElement) {
+export class TodoAppMixin extends ModeMixin(TodoMixin(LitElement)) {
 
-  static styles = css`
+  static styles = [
+    ...ModeMixin(LitElement).styles || [],
+    css`
     /* Your styles here */
-    .todo-app-container {
+    :host {
       display: block;
       font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 150px auto;
+      width: 400px;
       padding: 25px;
-      background-color: white;
       border: 1px solid #ccc;
       border-radius: 15px;
     }
@@ -31,10 +32,10 @@ export class TodoAppMixin extends TodoMixin(LitElement) {
     }
 
     button {
-      background-color: #5D3FD3;
+      background-color: var(--button-bg-color);
       width: 11%;
       height: 44px;
-      color: white;
+      color: var(--button-color);
       border: none;
       border-radius: 4px;
       cursor: pointer;
@@ -43,7 +44,7 @@ export class TodoAppMixin extends TodoMixin(LitElement) {
     }
 
     button:hover {
-      background-color: #7D65DB;
+      background-color: var(--button-hover-color);
     }
 
     ul {
@@ -57,7 +58,7 @@ export class TodoAppMixin extends TodoMixin(LitElement) {
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-      background-color: #DCDCDC;
+      background-color: var(--task-item-bg-color);
       border-radius: 4px;
       margin-bottom: 0px;
       position: relative;
@@ -103,7 +104,7 @@ export class TodoAppMixin extends TodoMixin(LitElement) {
       width: 25%;
       font-size: 18px;
     }
-  `;
+  `];
 
   render() {
     return html`

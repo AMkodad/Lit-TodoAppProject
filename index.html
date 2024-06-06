@@ -6,8 +6,24 @@
   <link rel="stylesheet" type="text/css"  href="./src/index.css" />
   <title>Todo App</title>
   <script type="module" src="./src/ComponentComposition/TodoAppComponent.ts"></script>
+  <script type="module" src="./src/MixinComponets/TodoApp.ts"></script>
 </head>
 <body>
-  <todo-component ></todo-component>
+  <div class="item1">
+    <todo-app-mixin mode="light"></todo-app-mixin>
+    <todo-app-mixin mode="dark"></todo-app-mixin>
+  </div>
+  <div class="item2">
+    <todo-component></todo-component>
+    <todo-component
+      color="black"
+      backgroundColor="#a98b58"
+      taskItemBGColor="#a9b388"
+      buttonTextColor="white"
+      buttonBGColor="olive"
+      buttonHoverColor="#686230"
+    ></todo-component>
+  </div>
+  
 </body>
 </html>

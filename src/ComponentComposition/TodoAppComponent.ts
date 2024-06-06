@@ -33,8 +33,7 @@ export class TodoComponent extends Appearance {
     .todo-app-container {
       display: block;
       font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 150px auto;
+      width: 400px;
       padding: 25px;
       border: 1px solid #ccc;
       border-radius: 15px;
