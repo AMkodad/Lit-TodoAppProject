@@ -23,7 +23,7 @@ export const ModeMixin = <T extends Constructor<LitElement>>(superClass: T) => {
                 :host([mode="light"]) {
                     background-color: #f4f5fa;
                     color: black;
-                    --button-bg-color: #5adbb5; 
+                    --button-bg-color: #5ddddd; 
                     --button-color: black;
                     --button-hover-color: #5dbea3;
                     --task-item-bg-color: #DCDCDC;

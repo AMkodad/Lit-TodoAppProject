@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js';
 import { TodoMixin } from './MethodMixin';
 import deleteIcon from '../assets/bin.png';
 import { ModeMixin } from './ModeMixin';
+import './MyButton';
 
 @customElement('todo-app-mixin')
 export class TodoAppMixin extends ModeMixin(TodoMixin(LitElement)) {
@@ -31,20 +32,10 @@ export class TodoAppMixin extends ModeMixin(TodoMixin(LitElement)) {
       font-size: 16px;
     }
 
-    button {
-      background-color: var(--button-bg-color);
-      width: 11%;
-      height: 44px;
-      color: var(--button-color);
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      float: right;
-      font-size: 35px;
-    }
-
-    button:hover {
-      background-color: var(--button-hover-color);
+    .input-feild{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
     }
 
     ul {
@@ -99,24 +90,21 @@ export class TodoAppMixin extends ModeMixin(TodoMixin(LitElement)) {
       justify-content: space-between;
       margin-top: 20px;
     }
-
-    .clear-button {
-      width: 25%;
-      font-size: 18px;
-    }
   `];
 
   render() {
     return html`
     <div class="todo-app-container">
       <h1>Todo App</h1>
-      <input 
+      <div class="input-feild">
+        <input 
         type="text" 
         placeholder="Add your new todo" 
         .value="${this.newTodo}" 
         @input="${this.updateNewTodo}"
         @keypress="${this.addTodo}">
-      <button @click="${this.addTodo}">+</button>
+        <my-button fontSize="35px" @click="${this.addTodo}">+</my-button>
+      </div>
       ${this.todos.map((todo, index) => html`
       <ul>
         <li class="task">
@@ -134,7 +122,7 @@ export class TodoAppMixin extends ModeMixin(TodoMixin(LitElement)) {
       `)}
       <div class="bottom-line">
         <p>You have ${this.pendingTasksCount} pending tasks</p>
-        <button class="clear-button" @click="${() => this.clearAll()}">Clear All</button>
+        <my-button width="100px" @click="${() => this.clearAll()}">Clear All</my-button>
       </div>
     </div>  
     `;
